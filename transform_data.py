@@ -14,8 +14,11 @@ def extract_date(file_path):
 for file in PM2_2016_FILE_PATHS:
     print(f"Processing {file}")
     
-    ggm = rasterize(f"{PM2_2016_DATA_PATH}/{file}", PM2_GRID_PATH)
-    ggm.rio.to_raster(f"{RESULTS_PATH}/{file}.tif")
+    out = rasterize(f"{file}", PM2_GRID_PATH)
+    file_name = file.split("/")[-1]
+    out.rio.to_raster(f"{RESULTS_PATH}/{file_name}_test.tif")
     print(f"Saved {RESULTS_PATH}/{file}.tif")
-    print("Done")
+    
+    break
+    # print("Done")
 

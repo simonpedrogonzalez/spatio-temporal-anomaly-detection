@@ -30,7 +30,7 @@ def read_rds_data(path):
     dat = result[None].T
     dat.columns = ["value"]
     date = extract_date(path)
-    dat["date"] = date
+    dat["date"] = pd.to_datetime(date)
     return dat
 
 def get_grid(path):
@@ -39,6 +39,11 @@ def get_grid(path):
         GRID_DF = pd.read_csv(path)[['lat', 'long']]
         GRID_FILE_PATH = path
     return GRID_DF
+
+def export_test_geojson(gdf):
+    gdf.to_crs(epsg=4326, inplace=True)
+    gdf.to_file(f"{RESULTS_PATH}/test.geojson", driver="GeoJSON")
+
 
 def create_gdf(dat, grid):
     assert grid.shape[0] == dat.shape[0], "Data and grid dimensions do not match!"
@@ -65,12 +70,14 @@ def rasterize(data_file_path, grid_file_path):
         rasterize_function=rasterize_points_griddata,
         interpolate_na_method="nearest", # try to preserve the original values
     )
-
+    geo_grid.date.rio.write_nodata(np.nan, inplace=True)
     mask_geometry = get_map_geometry()
-    ggm = geo_grid.rio.clip([mask_geometry], geo_grid.rio.crs, drop=True)
+    geo_grid = geo_grid.rio.clip([mask_geometry], geo_grid.rio.crs, drop=True)
 
-    ggm = ggm.rio.reproject("EPSG:4326")
-    return ggm
+    geo_grid = geo_grid.rio.reproject("EPSG:4326")
+    # # set all nodata in date column to Nan
+    # ggm['date'] = ggm['date'].where(ggm['date']!= 0)
+    return geo_grid
 
 # TODO: [low priority]
 # Untested experiment for more precision when rasterizing
