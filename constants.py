@@ -1,6 +1,7 @@
 import os
 
 RESULTS_PATH = "results"
+TMP_PATH = "tmp"
 PM2_GRID_PATH = "data/aq_data/PM25Grid.csv"
 PM2_2016_DATA_PATH = "data/aq_data/PM_2016"
 PM2_2016_FILE_PATHS = sorted([

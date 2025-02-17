@@ -35,6 +35,7 @@ def read_rds_data(path):
 
 def get_grid(path):
     global GRID_DF
+    global GRID_FILE_PATH
     if GRID_DF is None or GRID_FILE_PATH != path:
         GRID_DF = pd.read_csv(path)[['lat', 'long']]
         GRID_FILE_PATH = path
@@ -108,6 +109,12 @@ def rotate_gdf(gdf):
 def get_raster_transform(centroid, affine_src):
     # does not work correctly: it seems to flip the raster
     # in unexpected ways
+    # rotating a raster
+    # https://gis.stackexchange.com/questions/408386/rotating-raster-using-python
+    # https://rasterio.readthedocs.io/en/stable/topics/reproject.html#reprojection
+    # https://spaceforgood.medium.com/rotating-shifting-and-exporting-raster-data-eb834086a7ea
+    # https://gis.stackexchange.com/questions/408386/rotating-raster-using-python
+    # https://affine.readthedocs.io/en/latest/#affine.Affine.rotation
     angle = 14.42
     return Affine.rotation(angle, centroid) * affine_src
 
