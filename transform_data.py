@@ -66,6 +66,9 @@ def test_file():
     foile = f"{RESULTS_PATH}/pm_2016.nc"
     ds = xr.open_dataset(foile)
     print(ds)
+    import pandas as pd
+    df = pd.read_csv(PM2_GRID_PATH)
+    print(df)
 
 
 # generate_net_cdf_files()
